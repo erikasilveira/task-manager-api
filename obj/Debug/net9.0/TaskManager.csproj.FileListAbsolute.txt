@@ -29,3 +29,4 @@ C:\Users\Erika\projetos\task-manager-api\TaskManager\obj\Debug\net9.0\ref\TaskMa
 C:\Users\Erika\projetos\task-manager-api\TaskManager\bin\Debug\net9.0\Swashbuckle.AspNetCore.Swagger.dll
 C:\Users\Erika\projetos\task-manager-api\TaskManager\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 C:\Users\Erika\projetos\task-manager-api\TaskManager\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+C:\Users\Erika\projetos\task-manager-api\TaskManager\obj\Debug\net9.0\TaskManager.sourcelink.json

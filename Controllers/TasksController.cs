@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using TaskManager.Models;
 
 namespace TaskManager.Controllers
 {
@@ -6,37 +7,55 @@ namespace TaskManager.Controllers
     [Route("api/[controller]")]
     public class TasksController : ControllerBase
     {
-        // Lista de tarefas fake (temporária)
-        private static List<string> tasks = new List<string> { "Estudar C#", "Criar API", "Dominar Backend" };
+        private static List<TaskItem> tasks = new();
 
-        // GET: api/tasks
         [HttpGet]
-        public ActionResult<IEnumerable<string>> GetTasks()
+        public ActionResult<IEnumerable<TaskItem>> GetAll()
         {
             return Ok(tasks);
         }
 
-        // POST: api/tasks
-        [HttpPost]
-        public ActionResult AddTask([FromBody] string newTask)
+        [HttpGet("{id}")]
+        public ActionResult<TaskItem> GetById(int id)
         {
-            if (string.IsNullOrWhiteSpace(newTask))
-                return BadRequest("A tarefa não pode ser vazia.");
-
-            tasks.Add(newTask);
-            return Ok($"Tarefa '{newTask}' adicionada com sucesso!");
+            var task = tasks.FirstOrDefault(t => t.Id == id);
+            if (task == null)
+                return NotFound();
+            return Ok(task);
         }
 
-        // DELETE: api/tasks/{index}
-        [HttpDelete("{index}")]
-        public ActionResult DeleteTask(int index)
+        [HttpPost]
+        public ActionResult<TaskItem> Create(TaskItem newTask)
         {
-            if (index < 0 || index >= tasks.Count)
-                return NotFound("Tarefa não encontrada.");
+            newTask.Id = tasks.Count + 1;
+            newTask.CreatedAt = DateTime.Now;
+            tasks.Add(newTask);
+            return CreatedAtAction(nameof(GetById), new { id = newTask.Id }, newTask);
+        }
 
-            string removed = tasks[index];
-            tasks.RemoveAt(index);
-            return Ok($"Tarefa '{removed}' removida com sucesso!");
+        [HttpPut("{id}")]
+        public IActionResult Update(int id, TaskItem updatedTask)
+        {
+            var task = tasks.FirstOrDefault(t => t.Id == id);
+            if (task == null)
+                return NotFound();
+
+            task.Title = updatedTask.Title;
+            task.Description = updatedTask.Description;
+            task.IsCompleted = updatedTask.IsCompleted;
+
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            var task = tasks.FirstOrDefault(t => t.Id == id);
+            if (task == null)
+                return NotFound();
+
+            tasks.Remove(task);
+            return NoContent();
         }
     }
 }
